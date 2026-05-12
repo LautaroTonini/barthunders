@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BarThunders | Cocktails con Historia</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <style>
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --wine: #7d1f2a;
+      --dark-wine: #52131b;
+      --beige: #f5e7d3;
+      --cream: #fff8f0;
+      --gold: #c9a86a;
+      --gold-light: #e8c98a;
+      --text: #2c1d1d;
+      --text-muted: #6d5c5c;
+      --shadow: 0 10px 40px rgba(0,0,0,0.12);
+      --shadow-hover: 0 20px 60px rgba(0,0,0,0.2);
+      --radius: 28px;
+      --radius-sm: 18px;
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    h1, h2, h3, h4, h5 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    a { text-decoration: none; }
+
+    img { display: block; }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--cream); }
+    ::-webkit-scrollbar-thumb { background: var(--wine); border-radius: 10px; }
+
+    /* ===== BUTTONS ===== */
+    .btn-wine {
+      background: var(--wine);
+      color: #fff;
+      padding: 14px 30px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 24px rgba(125,31,42,0.35);
+      border: none;
+    }
+    .btn-wine:hover {
+      background: var(--dark-wine);
+      color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(125,31,42,0.45);
+    }
+
+    .btn-outline-light-custom {
+      border: 1.5px solid rgba(255,255,255,0.35);
+      color: #fff;
+      padding: 14px 30px;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      background: transparent;
+    }
+    .btn-outline-light-custom:hover {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--dark-wine);
+      padding: 14px 30px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 24px rgba(201,168,106,0.4);
+      border: none;
+    }
+    .btn-gold:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(201,168,106,0.55);
+      color: var(--dark-wine);
+    }
+
+    /* ===== NAVBAR ===== */
+    #mainNav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1050;
+      transition: all 0.4s ease;
+      padding: 0;
+    }
+
+    #mainNav .nav-inner {
+      background: rgba(82, 19, 27, 0.0);
+      backdrop-filter: blur(0px);
+      border-bottom: 1px solid transparent;
+      transition: all 0.4s ease;
+      padding: 22px 0;
+    }
+
+    #mainNav.scrolled .nav-inner {
+      background: rgba(82, 19, 27, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 14px 0;
+    }
+
+    .navbar-brand-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--beige);
+      letter-spacing: 1px;
+    }
+    .navbar-brand-text span {
+      color: var(--gold);
+    }
+
+    .nav-link-custom {
+      color: rgba(245,231,211,0.85) !important;
+      font-weight: 500;
+      font-size: 0.92rem;
+      letter-spacing: 0.3px;
+      padding: 6px 0 !important;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .nav-link-custom::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1.5px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+    .nav-link-custom:hover {
+      color: var(--gold) !important;
+    }
+    .nav-link-custom:hover::after { width: 100%; }
+
+    .navbar-toggler-custom {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 10px;
+      padding: 8px 12px;
+      color: var(--beige);
+      font-size: 1.2rem;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('hero-bar.jpg');
+      background-size: cover;
+      background-position: center 30%;
+      transform: scale(1.05);
+      transition: transform 8s ease;
+    }
+
+    .hero-bg.loaded { transform: scale(1); }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(30, 5, 8, 0.82) 0%,
+        rgba(52, 13, 19, 0.72) 50%,
+        rgba(20, 5, 8, 0.78) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding-top: 120px;
+      padding-bottom: 80px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(201,168,106,0.15);
+      border: 1px solid rgba(201,168,106,0.35);
+      padding: 10px 20px;
+      border-radius: 999px;
+      margin-bottom: 28px;
+      font-size: 0.88rem;
+      color: var(--gold-light);
+      letter-spacing: 0.5px;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      line-height: 0.95;
+      color: #fff;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-lead {
+      font-size: 1.15rem;
+      max-width: 600px;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 42px;
+      line-height: 1.75;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 64px;
+    }
+
+    /* Stats */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 24px 20px;
+      border-radius: 22px;
+      backdrop-filter: blur(12px);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-4px);
+    }
+
+    .stat-card .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.3px;
+    }
+
+    /* Scroll indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.78rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ===== SECTION BASE ===== */
+    .section-pad { padding: 110px 0; }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--wine);
+      margin-bottom: 14px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      color: var(--dark-wine);
+      margin-bottom: 18px;
+      line-height: 1.1;
+    }
+
+    .section-title p {
+      max-width: 680px;
+      margin: 0 auto;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
+
+    /* ===== FEATURES ===== */
+    .features-section { background: var(--cream); }
+
+    .feature-card {
+      background: #fff;
+      padding: 40px 36px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(125,31,42,0.06);
+      transition: all 0.35s ease;
+      height: 100%;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(125,31,42,0.15);
+    }
+
+    .feature-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(125,31,42,0.1), rgba(201,168,106,0.15));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.9rem;
+      margin-bottom: 26px;
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover .feature-icon { transform: scale(1.1) rotate(-5deg); }
+
+    .feature-card h3 {
+      font-size: 1.9rem;
+      color: var(--dark-wine);
+      margin-bottom: 14px;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* ===== COCKTAIL SHOWCASE ===== */
+    .cocktail-showcase {
+      background: linear-gradient(160deg, #2a0b0f 0%, var(--dark-wine) 40%, #1a0508 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cocktail-showcase::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(201,168,106,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cocktail-showcase .section-title h2 { color: var(--beige); }
+    .cocktail-showcase .section-title p { color: rgba(255,255,255,0.65); }
+    .cocktail-showcase .section-label { color: var(--gold); }
+
+    .cocktail-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all 0.35s ease;
+      height: 100%;
+    }
+
+    .cocktail-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(201,168,106,0.3);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+
+    .cocktail-image {
+      height: 270px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cocktail-image::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: linear-gradient(to top, rgba(30,5,8,0.8), transparent);
+    }
+
+    .cocktail-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(201,168,106,0.9);
+      color: var(--dark-wine);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+      z-index: 1;
+    }
+
+    .cocktail-content {
+      padding: 32px 30px;
+    }
+
+    .cocktail-content h3 {
+      font-size: 2.2rem;
+      color: var(--beige);
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+
+    .cocktail-content > p {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .cocktail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .tag {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(201,168,106,0.12);
+      border: 1px solid rgba(201,168,106,0.2);
+      font-size: 0.82rem;
+      color: var(--gold-light);
+      font-weight: 500;
+    }
+
+    .recipe-section {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 20px;
+      margin-top: 4px;
+    }
+
+    .recipe-section h4 {
+      font-size: 1rem;
+      color: var(--gold);
+      margin-bottom: 10px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.78rem;
+    }
+
+    .recipe-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px;
+    }
+
+    .recipe-section ul li {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+      padding: 5px 0;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .recipe-section ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: 0.75rem;
+    }
+
+    /* ===== HISTORY / TIMELINE ===== */
+    .history-section { background: var(--cream); }
+
+    .timeline-wrapper {
+      position: relative;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent, rgba(125,31,42,0.25), rgba(201,168,106,0.4), rgba(125,31,42,0.25), transparent);
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      position: relative;
+      width: 50%;
+      padding: 0 50px 60px;
+    }
+
+    .timeline-item:nth-child(odd) {
+      left: 0;
+      text-align: right;
+    }
+
+    .timeline-item:nth-child(even) {
+      left: 50%;
+      text-align: left;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      top: 20px;
+      width: 16px;
+      height: 16px;
+      background: var(--gold);
+      border-radius: 50%;
+      border: 3px solid var(--cream);
+      box-shadow: 0 0 0 3px var(--wine);
+    }
+
+    .timeline-item:nth-child(odd) .timeline-dot {
+      right: -8px;
+    }
+
+    .timeline-item:nth-child(even) .timeline-dot {
+      left: -8px;
+    }
+
+    .timeline-content {
+      background: #fff;
+      padding: 30px 28px;
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(125,31,42,0.06);
+      transition: all 0.3s ease;
+    }
+
+    .timeline-content:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .timeline-year {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--wine);
+      margin-bottom: 8px;
+    }
+
+    .timeline-content h3 {
+      font-size: 1.6rem;
+      color: var(--dark-wine);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .timeline-content p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .timeline-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-bottom: 18px;
+    }
+
+    /* ===== SEO / CONTENT SECTION ===== */
+    .content-section { background: #fff; }
+
+    .seo-card {
+      background: var(--cream);
+      border: 1px solid rgba(125,31,42,0.08);
+      padding: 34px 30px;
+      border-radius: 22px;
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+
+    .seo-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--wine);
+      box-shadow: var(--shadow);
+    }
+
+    .seo-card-icon {
+      font-size: 2rem;
+      color: var(--wine);
+      margin-bottom: 16px;
+    }
+
+    .seo-card h3 {
+      font-size: 1.7rem;
+      color: var(--dark-wine);
+      margin-bottom: 12px;
+    }
+
+    .seo-card p {
+      color: var(--text-muted);
+      font-size: 0.93rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* ===== DOWNLOAD SECTION ===== */
+    .download-section { background: var(--beige); }
+
+    .download-box {
+      background: #fff;
+      padding: 70px 60px;
+      border-radius: 36px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .download-box h2 {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      color: var(--dark-wine);
+      margin-bottom: 18px;
+    }
+
+    .download-box > p {
+      max-width: 580px;
+      margin: 0 auto 48px;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .download-card {
+      border: 1.5px solid rgba(125,31,42,0.1);
+      padding: 36px 28px;
+      border-radius: 24px;
+      transition: all 0.3s ease;
+      text-align: left;
+      height: 100%;
+      background: var(--cream);
+    }
+
+    .download-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--wine);
+      box-shadow: var(--shadow);
+    }
+
+    .download-card-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, rgba(125,31,42,0.12), rgba(201,168,106,0.2));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .download-card h3 {
+      font-size: 1.8rem;
+      color: var(--dark-wine);
+      margin-bottom: 10px;
+    }
+
+    .download-card p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    /* ===== FAQ ===== */
+    .faq-section { background: var(--cream); }
+
+    .faq-item {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid rgba(125,31,42,0.06);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+      box-shadow: var(--shadow);
+    }
+
+    .faq-question {
+      padding: 26px 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      user-select: none;
+    }
+
+    .faq-question h3 {
+      font-size: 1.5rem;
+      color: var(--dark-wine);
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .faq-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(125,31,42,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--wine);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .faq-item.open .faq-icon {
+      background: var(--wine);
+      color: #fff;
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+    }
+
+    .faq-answer-inner {
+      padding: 0 30px 26px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.75;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 200px;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: linear-gradient(160deg, #1a0508 0%, var(--dark-wine) 100%);
+      color: var(--beige);
+      padding: 80px 0 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    footer::before {
+      content: '';
+      position: absolute;
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(201,168,106,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--beige);
+      margin-bottom: 16px;
+    }
+
+    .footer-brand span { color: var(--gold); }
+
+    .footer-tagline {
+      max-width: 560px;
+      margin: 0 auto 36px;
+      color: rgba(255,255,255,0.65);
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
+
+    .footer-divider {
+      border-color: rgba(255,255,255,0.1);
+      margin: 40px 0 28px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .footer-links a {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover { color: var(--gold); }
+
+    .footer-copy {
+      color: rgba(255,255,255,0.35);
+      font-size: 0.82rem;
+    }
+
+    /* ===== BACK TO TOP ===== */
+    #backToTop {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 48px;
+      height: 48px;
+      background: var(--wine);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 6px 20px rgba(125,31,42,0.4);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
+
+    #backToTop.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #backToTop:hover {
+      background: var(--dark-wine);
+      transform: translateY(-3px);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 991px) {
+      .hero-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .timeline-line { display: none; }
+
+      .timeline-item {
+        width: 100%;
+        left: 0 !important;
+        text-align: left !important;
+        padding: 0 0 40px 32px;
+        border-left: 2px solid rgba(125,31,42,0.2);
+      }
+
+      .timeline-dot {
+        left: -9px !important;
+        right: auto !important;
+      }
+
+      .download-box {
+        padding: 50px 30px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .hero-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero h1 { font-size: 3rem; }
+
+      .section-pad { padding: 80px 0; }
+
+      .hero-buttons { flex-direction: column; }
+      .hero-buttons .btn-wine,
+      .hero-buttons .btn-outline-light-custom {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .stat-card { padding: 18px 14px; }
+      .stat-card .stat-number { font-size: 1.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav id="mainNav">
+    <div class="nav-inner">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+
+          <a href="#" class="navbar-brand-text">Bar<span>Thunders</span></a>
+
+          <!-- Desktop links -->
+          <div class="d-none d-lg-flex align-items-center gap-4">
+            <a href="#catalogo" class="nav-link-custom">Cocktails</a>
+            <a href="#historia" class="nav-link-custom">Historia</a>
+            <a href="#recetas" class="nav-link-custom">Recetas</a>
+            <a href="#descargas" class="nav-link-custom">Cartas</a>
+            <a href="#faq" class="nav-link-custom">FAQ</a>
+          </div>
+
+          <div class="d-flex align-items-center gap-3">
+            <a href="#descargas" class="btn-wine d-none d-md-inline-flex">
+              <i class="bi bi-download"></i> Descargar Cartas
+            </a>
+            <!-- Mobile toggle -->
+            <button class="navbar-toggler-custom d-lg-none" id="mobileMenuBtn">
+              <i class="bi bi-list"></i>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" style="display:none; padding: 20px 0 10px;">
+          <div class="d-flex flex-column gap-3">
+            <a href="#catalogo" class="nav-link-custom" onclick="closeMobileMenu()">Cocktails</a>
+            <a href="#historia" class="nav-link-custom" onclick="closeMobileMenu()">Historia</a>
+            <a href="#recetas" class="nav-link-custom" onclick="closeMobileMenu()">Recetas</a>
+            <a href="#descargas" class="nav-link-custom" onclick="closeMobileMenu()">Cartas</a>
+            <a href="#faq" class="nav-link-custom" onclick="closeMobileMenu()">FAQ</a>
+            <a href="#descargas" class="btn-wine mt-2" onclick="closeMobileMenu()">
+              <i class="bi bi-download"></i> Descargar Cartas
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="inicio">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="container hero-content">
+
+      <div data-aos="fade-up" data-aos-duration="800">
+        <div class="hero-badge">
+          <i class="bi bi-stars"></i>
+          Mixología interactiva &nbsp;·&nbsp; Recetas profesionales &nbsp;·&nbsp; Historia real
+        </div>
+      </div>
+
+      <h1 data-aos="fade-up" data-aos-delay="100" data-aos-duration="900">
+        Descubrí cocktails<br>
+        con <em>historia,</em><br>
+        técnica y personalidad.
+      </h1>
+
+      <p class="hero-lead" data-aos="fade-up" data-aos-delay="200">
+        Explorá recetas profesionales, ingredientes detallados, preparación paso a paso y el origen cultural detrás de cada cocktail clásico y moderno.
+      </p>
+
+      <div class="hero-buttons" data-aos="fade-up" data-aos-delay="300">
+        <a href="#catalogo" class="btn-wine">
+          <i class="bi bi-collection"></i> Ver Catálogo
+        </a>
+        <a href="#descargas" class="btn-outline-light-custom">
+          <i class="bi bi-download"></i> Descargar Cartas
+        </a>
+      </div>
+
+      <div class="hero-stats" data-aos="fade-up" data-aos-delay="400">
+        <div class="stat-card">
+          <div class="stat-number" data-count="120">0</div>
+          <div class="stat-label">Cocktails documentados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" data-count="40">0</div>
+          <div class="stat-label">Historias originales</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Recetas profesionales</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">Premium</div>
+          <div class="stat-label">Experiencia interactiva</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <i class="bi bi-chevron-down"></i>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="features-section section-pad">
+    <div class="container">
+
+      <div class="section-title text-center mb-5" data-aos="fade-up">
+        <span class="section-label">¿Por qué BarThunders?</span>
+        <h2>¿Qué hace diferente a BarThunders?</h2>
+        <p>La mayoría de las páginas solo muestran nombres y fotos. BarThunders combina mixología educativa, storytelling, técnicas profesionales y experiencia visual premium.</p>
+      </div>
+
+      <div class="row g-4">
+
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+          <div class="feature-card">
+            <div class="feature-icon">🍸</div>
+            <h3>Recetas Profesionales</h3>
+            <p>Preparaciones detalladas utilizadas por bartenders profesionales, explicadas paso a paso para principiantes y expertos.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="80">
+          <div class="feature-card">
+            <div class="feature-icon">📖</div>
+            <h3>Historia Real</h3>
+            <p>Descubrí el origen cultural detrás de cada cocktail: épocas, personajes, ciudades y evolución histórica.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="160">
+          <div class="feature-card">
+            <div class="feature-icon">🧊</div>
+            <h3>Técnicas & Preparación</h3>
+            <p>Tipos de hielo, garnish, cristalería, perfiles sensoriales y métodos de preparación explicados visualmente.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="240">
+          <div class="feature-card">
+            <div class="feature-icon">🔎</div>
+            <h3>Búsqueda Inteligente</h3>
+            <p>Filtrá cocktails por sabor, tipo de alcohol, intensidad, ingredientes o estilo de preparación.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="320">
+          <div class="feature-card">
+            <div class="feature-icon">🎥</div>
+            <h3>Experiencia Educativa</h3>
+            <p>Videos, explicaciones y contenido visual pensado para aprender mixología de manera entretenida.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
+          <div class="feature-card">
+            <div class="feature-icon">📂</div>
+            <h3>Cartas Descargables</h3>
+            <p>Descargá cartas premium para bares, eventos, inspiración o formación personal.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COCKTAIL SHOWCASE ===== -->
+  <section class="cocktail-showcase section-pad" id="catalogo">
+    <div class="container">
+
+      <div class="section-title text-center mb-5" data-aos="fade-up">
+        <span class="section-label" style="color: var(--gold);">Catálogo destacado</span>
+        <h2>Cocktails destacados</h2>
+        <p>Cada cocktail combina historia, técnica y experiencia visual.</p>
+      </div>
+
+      <div class="row g-4">
+
+        <!-- Negroni -->
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="0">
+          <div class="cocktail-card">
+            <div class="cocktail-image" style="background-image: url('negroni.jpg');">
+              <span class="cocktail-badge">Clásico Italiano</span>
+            </div>
+            <div class="cocktail-content">
+              <h3>Negroni</h3>
+              <p>Nacido en Florencia alrededor de 1919, el Negroni se convirtió en uno de los cocktails más icónicos de la coctelería italiana.</p>
+              <div class="cocktail-tags">
+                <span class="tag">Gin</span>
+                <span class="tag">Amargo</span>
+                <span class="tag">Clásico</span>
+              </div>
+              <div class="recipe-section">
+                <h4>Ingredientes</h4>
+                <ul>
+                  <li>30 ml Gin</li>
+                  <li>30 ml Campari</li>
+                  <li>30 ml Vermouth Rosso</li>
+                  <li>Piel de naranja</li>
+                </ul>
+                <h4>Preparación</h4>
+                <ul>
+                  <li>Agregar hielo grande al vaso.</li>
+                  <li>Verter ingredientes y mezclar suavemente.</li>
+                  <li>Perfumar con piel de naranja.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mojito -->
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="120">
+          <div class="cocktail-card">
+            <div class="cocktail-image" style="background-image: url('mojito.jpg');">
+              <span class="cocktail-badge">Caribeño</span>
+            </div>
+            <div class="cocktail-content">
+              <h3>Mojito</h3>
+              <p>Originario de Cuba, el Mojito evolucionó desde mezclas medicinales del siglo XVI hasta convertirse en símbolo del Caribe.</p>
+              <div class="cocktail-tags">
+                <span class="tag">Ron</span>
+                <span class="tag">Refrescante</span>
+                <span class="tag">Caribeño</span>
+              </div>
+              <div class="recipe-section">
+                <h4>Ingredientes</h4>
+                <ul>
+                  <li>50 ml Ron blanco</li>
+                  <li>Hierbabuena fresca</li>
+                  <li>Azúcar</li>
+                  <li>Jugo de lima</li>
+                  <li>Soda</li>
+                </ul>
+                <h4>Preparación</h4>
+                <ul>
+                  <li>Macerar suavemente la hierbabuena.</li>
+                  <li>Agregar hielo triturado.</li>
+                  <li>Completar con soda y decorar.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Old Fashioned -->
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="240">
+          <div class="cocktail-card">
+            <div class="cocktail-image" style="background-image: url('old-fashioned.jpg');">
+              <span class="cocktail-badge">Vintage</span>
+            </div>
+            <div class="cocktail-content">
+              <h3>Old Fashioned</h3>
+              <p>Considerado uno de los primeros cocktails modernos documentados en Estados Unidos durante el siglo XIX.</p>
+              <div class="cocktail-tags">
+                <span class="tag">Whisky</span>
+                <span class="tag">Intenso</span>
+                <span class="tag">Vintage</span>
+              </div>
+              <div class="recipe-section">
+                <h4>Ingredientes</h4>
+                <ul>
+                  <li>60 ml Bourbon</li>
+                  <li>Azúcar</li>
+                  <li>Angostura bitters</li>
+                  <li>Piel de naranja</li>
+                </ul>
+                <h4>Preparación</h4>
+                <ul>
+                  <li>Disolver azúcar y bitters.</li>
+                  <li>Agregar hielo grande.</li>
+                  <li>Incorporar bourbon y mezclar.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HISTORY TIMELINE ===== -->
+  <section class="history-section section-pad" id="historia">
+    <div class="container">
+
+      <div class="section-title text-center mb-5" data-aos="fade-up">
+        <span class="section-label">Línea del tiempo</span>
+        <h2>Explorá la evolución de la coctelería</h2>
+        <p>Una experiencia educativa diseñada para amantes de la mixología, bartenders y curiosos.</p>
+      </div>
+
+      <div class="timeline-wrapper">
+        <div class="timeline-line"></div>
+
+        <div class="timeline-item" data-aos="fade-right" data-aos-delay="0">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">1806</div>
+            <h3>Primer uso del término Cocktail</h3>
+            <p>El término "cocktail" aparece documentado en periódicos estadounidenses describiendo bebidas alcohólicas mezcladas con azúcar, agua y bitters.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item" data-aos="fade-left" data-aos-delay="100">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <img src="speakeasy.jpg" alt="Era Speakeasy 1920" class="timeline-img" loading="lazy">
+            <div class="timeline-year">1920</div>
+            <h3>Era Speakeasy</h3>
+            <p>La prohibición en Estados Unidos impulsa bares clandestinos y nuevas técnicas para mejorar destilados de baja calidad.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item" data-aos="fade-right" data-aos-delay="200">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">1980</div>
+            <h3>Coctelería Moderna</h3>
+            <p>Surgen reinterpretaciones de clásicos y una nueva cultura premium alrededor de la mixología con ingredientes artesanales.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item" data-aos="fade-left" data-aos-delay="300">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">Actualidad</div>
+            <h3>Experiencias Interactivas</h3>
+            <p>La mixología combina diseño, narrativa, tecnología y educación para crear experiencias inmersivas y memorables.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTENT / SEO SECTION ===== -->
+  <section class="content-section section-pad" id="recetas">
+    <div class="container">
+
+      <div class="section-title text-center mb-5" data-aos="fade-up">
+        <span class="section-label">Contenido educativo</span>
+        <h2>Contenido diseñado para aprender y descubrir</h2>
+        <p>BarThunders está optimizado para búsquedas reales relacionadas con cocktails, recetas y cultura de bar.</p>
+      </div>
+
+      <div class="row g-4">
+
+        <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+          <div class="seo-card">
+            <div class="seo-card-icon"><i class="bi bi-cup-straw"></i></div>
+            <h3>Cómo preparar Negroni</h3>
+            <p>Técnicas, hielo recomendado y proporciones exactas explicadas paso a paso.</p>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="80">
+          <div class="seo-card">
+            <div class="seo-card-icon"><i class="bi bi-book"></i></div>
+            <h3>Historia del Mojito</h3>
+            <p>El recorrido histórico del cocktail más famoso del Caribe.</p>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="160">
+          <div class="seo-card">
+            <div class="seo-card-icon"><i class="bi bi-droplet"></i></div>
+            <h3>Tipos de Gin</h3>
+            <p>Diferencias entre London Dry, Old Tom, Navy Strength y estilos modernos.</p>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="240">
+          <div class="seo-card">
+            <div class="seo-card-icon"><i class="bi bi-file-earmark-pdf"></i></div>
+            <h3>Cartas Premium</h3>
+            <p>Descargá menús digitales con diseño elegante para inspiración o uso profesional.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DOWNLOAD SECTION ===== -->
+  <section class="download-section section-pad" id="descargas">
+    <div class="container">
+      <div class="download-box" data-aos="fade-up">
+
+        <span class="section-label">Cartas digitales</span>
+        <h2>Descargá cartas premium</h2>
+        <p>Accedé a cartas digitales listas para explorar, compartir o utilizar como inspiración profesional.</p>
+
+        <div class="row g-4 text-start">
+
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="80">
+            <div class="download-card">
+              <div class="download-card-icon">📚</div>
+              <h3>Classic Collection</h3>
+              <p>Los cocktails clásicos más importantes de la historia con recetas y contexto histórico.</p>
+              <a href="#" class="btn-wine">
+                <i class="bi bi-download"></i> Descargar PDF
+              </a>
+            </div>
+          </div>
+
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="160">
+            <div class="download-card">
+              <div class="download-card-icon">✨</div>
+              <h3>Signature Cocktails</h3>
+              <p>Cocktails modernos y reinterpretaciones premium con técnicas contemporáneas.</p>
+              <a href="#" class="btn-wine">
+                <i class="bi bi-download"></i> Descargar PDF
+              </a>
+            </div>
+          </div>
+
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="240">
+            <div class="download-card">
+              <div class="download-card-icon">🌿</div>
+              <h3>Mocktails Collection</h3>
+              <p>Opciones sin alcohol con recetas creativas y visuales para toda ocasión.</p>
+              <a href="#" class="btn-wine">
+                <i class="bi bi-download"></i> Descargar PDF
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="faq-section section-pad" id="faq">
+    <div class="container">
+
+      <div class="section-title text-center mb-5" data-aos="fade-up">
+        <span class="section-label">Preguntas frecuentes</span>
+        <h2>Todo lo que necesitás saber</h2>
+        <p>Respuestas a las consultas más comunes sobre BarThunders.</p>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="d-flex flex-column gap-3" data-aos="fade-up" data-aos-delay="80">
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Las recetas son aptas para principiantes?</h3>
+                <div class="faq-icon"><i class="bi bi-plus"></i></div>
+              </div>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  Sí. Cada cocktail incluye explicaciones paso a paso, ingredientes y técnicas detalladas pensadas tanto para quienes se inician como para bartenders con experiencia.
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Puedo descargar cartas digitales?</h3>
+                <div class="faq-icon"><i class="bi bi-plus"></i></div>
+              </div>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  Sí. BarThunders ofrece cartas premium descargables en formato digital, disponibles en tres colecciones: Classic, Signature y Mocktails.
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Incluyen cocktails sin alcohol?</h3>
+                <div class="faq-icon"><i class="bi bi-plus"></i></div>
+              </div>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  Sí. También contamos con una colección completa de mocktails modernos con recetas creativas y visualmente atractivas.
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Las recetas son profesionales?</h3>
+                <div class="faq-icon"><i class="bi bi-plus"></i></div>
+              </div>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  Sí. Las preparaciones están basadas en estándares de coctelería profesional y técnicas modernas utilizadas en bares de todo el mundo.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="container text-center">
+
+      <div class="footer-brand" data-aos="fade-up">Bar<span>Thunders</span></div>
+
+      <p class="footer-tagline" data-aos="fade-up" data-aos-delay="80">
+        Una experiencia interactiva para descubrir cocktails, historia, creatividad y cultura de bar.
+      </p>
+
+      <div data-aos="fade-up" data-aos-delay="160">
+        <a href="#catalogo" class="btn-gold">
+          <i class="bi bi-collection"></i> Explorar Cocktails
+        </a>
+      </div>
+
+      <hr class="footer-divider">
+
+      <div class="footer-links" data-aos="fade-up" data-aos-delay="200">
+        <a href="#catalogo">Cocktails</a>
+        <a href="#historia">Historia</a>
+        <a href="#recetas">Recetas</a>
+        <a href="#descargas">Cartas</a>
+        <a href="#faq">FAQ</a>
+      </div>
+
+      <p class="footer-copy" data-aos="fade-up" data-aos-delay="240">
+        &copy; 2025 BarThunders. Todos los derechos reservados.
+      </p>
+
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+  <script>
+    // ===== AOS Init =====
+    AOS.init({
+      duration: 700,
+      once: true,
+      offset: 60,
+      easing: 'ease-out-cubic'
+    });
+
+    // ===== Navbar scroll effect =====
+    const mainNav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        mainNav.classList.add('scrolled');
+      } else {
+        mainNav.classList.remove('scrolled');
+      }
+    });
+
+    // ===== Mobile menu =====
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+
+    mobileMenuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.style.display = menuOpen ? 'block' : 'none';
+      mobileMenuBtn.innerHTML = menuOpen
+        ? '<i class="bi bi-x-lg"></i>'
+        : '<i class="bi bi-list"></i>';
+    });
+
+    function closeMobileMenu() {
+      menuOpen = false;
+      mobileMenu.style.display = 'none';
+      mobileMenuBtn.innerHTML = '<i class="bi bi-list"></i>';
+    }
+
+    // ===== Hero background parallax =====
+    const heroBg = document.getElementById('heroBg');
+    setTimeout(() => heroBg.classList.add('loaded'), 100);
+
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+      if (scrolled < window.innerHeight) {
+        heroBg.style.transform = `scale(1) translateY(${scrolled * 0.3}px)`;
+      }
+    });
+
+    // ===== Counter animation =====
+    function animateCounter(el) {
+      const target = parseInt(el.getAttribute('data-count'));
+      const duration = 1800;
+      const step = target / (duration / 16);
+      let current = 0;
+
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        el.textContent = Math.floor(current) + '+';
+      }, 16);
+    }
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('[data-count]').forEach(el => {
+      counterObserver.observe(el);
+    });
+
+    // ===== FAQ accordion =====
+    function toggleFaq(questionEl) {
+      const item = questionEl.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+
+      // Close all
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+
+      // Open clicked if was closed
+      if (!isOpen) {
+        item.classList.add('open');
+      }
+    }
+
+    // ===== Back to top =====
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+
+    // ===== Active nav link on scroll =====
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link-custom');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        if (window.scrollY >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.style.color = '';
+        if (link.getAttribute('href') === '#' + current) {
+          link.style.color = 'var(--gold)';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
