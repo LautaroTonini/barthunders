@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import CocktailSearch from '@/components/CocktailSearch';
 import CocktailCard from '@/components/CocktailCard';
+import BottleCalculator from '@/components/BottleCalculator';
 import { Cocktail, cocktails as allCocktails } from '@/data/cocktails';
 
 export default function Home() {
@@ -59,6 +60,9 @@ export default function Home() {
             </a>
             <a href="#recetas" className={`nav-link transition-colors ${activeSection === 'recetas' ? 'text-[#c9a86a]' : 'text-[rgba(245,231,211,0.85)] hover:text-[#c9a86a]'}`}>
               Recetas
+            </a>
+            <a href="#calculadora" className={`nav-link transition-colors ${activeSection === 'calculadora' ? 'text-[#c9a86a]' : 'text-[rgba(245,231,211,0.85)] hover:text-[#c9a86a]'}`}>
+              Calculadora
             </a>
             <a href="#descargas" className={`nav-link transition-colors ${activeSection === 'descargas' ? 'text-[#c9a86a]' : 'text-[rgba(245,231,211,0.85)] hover:text-[#c9a86a]'}`}>
               Cartas
@@ -232,6 +236,21 @@ export default function Home() {
               </div>
             )}
           </div>
+        </div>
+      </section>
+
+      {/* Bottle Calculator */}
+      <section id="calculadora" className="section-pad bg-gradient-to-br from-[#52131b] via-[#2a0b0f] to-[#1a0508] relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-[rgba(201,168,106,0.08)] rounded-full blur-3xl pointer-events-none" />
+        <div className="container relative z-10">
+          <div className="text-center mb-12">
+            <div className="section-label text-[#c9a86a]">Planificación de eventos</div>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#f5e7d3] mb-4">Calcula botellas para tu fiesta</h2>
+            <p className="text-lg text-[rgba(255,255,255,0.65)] max-w-2xl mx-auto">
+              Selecciona los cocktails que deseas servir, ingresa la cantidad de invitados y obtén un cálculo exacto de botellas necesarias.
+            </p>
+          </div>
+          <BottleCalculator cocktails={allCocktails} />
         </div>
       </section>
 
