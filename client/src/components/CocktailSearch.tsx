@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { Cocktail, cocktails } from '@/data/cocktails';
 
@@ -48,8 +48,8 @@ export default function CocktailSearch({ onCocktailsChange }: CocktailSearchProp
     });
   }, [searchName, selectedIngredients, selectedFlavors, selectedTypes, selectedAlcohols]);
 
-  // Notify parent of filtered results
-  useMemo(() => {
+  // Notify parent of filtered results using useEffect to avoid setState during render
+  useEffect(() => {
     onCocktailsChange?.(filteredCocktails);
   }, [filteredCocktails, onCocktailsChange]);
 
