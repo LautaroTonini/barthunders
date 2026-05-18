@@ -19,6 +19,28 @@ const BOTTLE_PRICES: { [key: string]: number } = {
   'Aperol': 22000,
 };
 
+// Función para redondear a un precio psicológicamente atractivo
+function getPsychologicalPrice(baseCost: number): number {
+  // Margen: 300-400% (multiplicador 4-5x)
+  const minPrice = baseCost * 4;
+  const maxPrice = baseCost * 5;
+  const midPrice = (minPrice + maxPrice) / 2;
+
+  // Redondear a números psicológicamente atractivos
+  if (midPrice < 500) {
+    // Para precios bajos, redondear a .99 o .50
+    const rounded = Math.round(midPrice / 50) * 50;
+    return rounded > midPrice ? rounded : rounded + 50;
+  } else if (midPrice < 2000) {
+    // Para precios medios, redondear a .99 o .00
+    const rounded = Math.round(midPrice / 100) * 100;
+    return rounded > midPrice ? rounded : rounded + 100;
+  } else {
+    // Para precios altos, redondear a .00
+    return Math.round(midPrice / 100) * 100;
+  }
+}
+
 // Función para calcular el costo de un cocktail
 function calculateCocktailCost(ingredients: string[]): { prices: { [key: string]: number }, total: number } {
   const prices: { [key: string]: number } = {};
@@ -82,6 +104,8 @@ export interface Cocktail {
   alcohol: 'Gin' | 'Ron' | 'Whisky' | 'Vodka' | 'Tequila' | 'Brandy' | 'Licor' | 'Sin Alcohol';
   ingredientPrices?: { [key: string]: number }; // Precios en ARS
   preparationCost?: number; // Costo total de preparación en ARS
+  salePrice?: number; // Precio de venta sugerido en ARS
+  margin?: number; // Margen de ganancia en porcentaje
 }
 
 export const cocktails: Cocktail[] = [
@@ -102,6 +126,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Gin',
       ingredientPrices: negroniCost.prices,
       preparationCost: negroniCost.total,
+      salePrice: getPsychologicalPrice(negroniCost.total),
+      margin: Math.round(((getPsychologicalPrice(negroniCost.total) - negroniCost.total) / negroniCost.total) * 100),
     };
   })(),
   (() => {
@@ -121,6 +147,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Ron',
       ingredientPrices: mojitoCost.prices,
       preparationCost: mojitoCost.total,
+      salePrice: getPsychologicalPrice(mojitoCost.total),
+      margin: Math.round(((getPsychologicalPrice(mojitoCost.total) - mojitoCost.total) / mojitoCost.total) * 100),
     };
   })(),
   (() => {
@@ -140,6 +168,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Whisky',
       ingredientPrices: oldFashionedCost.prices,
       preparationCost: oldFashionedCost.total,
+      salePrice: getPsychologicalPrice(oldFashionedCost.total),
+      margin: Math.round(((getPsychologicalPrice(oldFashionedCost.total) - oldFashionedCost.total) / oldFashionedCost.total) * 100),
     };
   })(),
   (() => {
@@ -159,6 +189,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Tequila',
       ingredientPrices: margaritaCost.prices,
       preparationCost: margaritaCost.total,
+      salePrice: getPsychologicalPrice(margaritaCost.total),
+      margin: Math.round(((getPsychologicalPrice(margaritaCost.total) - margaritaCost.total) / margaritaCost.total) * 100),
     };
   })(),
   (() => {
@@ -178,6 +210,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Ron',
       ingredientPrices: daiquiriCost.prices,
       preparationCost: daiquiriCost.total,
+      salePrice: getPsychologicalPrice(daiquiriCost.total),
+      margin: Math.round(((getPsychologicalPrice(daiquiriCost.total) - daiquiriCost.total) / daiquiriCost.total) * 100),
     };
   })(),
   (() => {
@@ -197,6 +231,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Whisky',
       ingredientPrices: manhattanCost.prices,
       preparationCost: manhattanCost.total,
+      salePrice: getPsychologicalPrice(manhattanCost.total),
+      margin: Math.round(((getPsychologicalPrice(manhattanCost.total) - manhattanCost.total) / manhattanCost.total) * 100),
     };
   })(),
   (() => {
@@ -216,6 +252,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Ron',
       ingredientPrices: pinaColadaCost.prices,
       preparationCost: pinaColadaCost.total,
+      salePrice: getPsychologicalPrice(pinaColadaCost.total),
+      margin: Math.round(((getPsychologicalPrice(pinaColadaCost.total) - pinaColadaCost.total) / pinaColadaCost.total) * 100),
     };
   })(),
   (() => {
@@ -235,6 +273,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Gin',
       ingredientPrices: gimletCost.prices,
       preparationCost: gimletCost.total,
+      salePrice: getPsychologicalPrice(gimletCost.total),
+      margin: Math.round(((getPsychologicalPrice(gimletCost.total) - gimletCost.total) / gimletCost.total) * 100),
     };
   })(),
   (() => {
@@ -254,6 +294,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Vodka',
       ingredientPrices: cosmopolitanCost.prices,
       preparationCost: cosmopolitanCost.total,
+      salePrice: getPsychologicalPrice(cosmopolitanCost.total),
+      margin: Math.round(((getPsychologicalPrice(cosmopolitanCost.total) - cosmopolitanCost.total) / cosmopolitanCost.total) * 100),
     };
   })(),
   (() => {
@@ -273,6 +315,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Tequila',
       ingredientPrices: margaritaFrozenCost.prices,
       preparationCost: margaritaFrozenCost.total,
+      salePrice: getPsychologicalPrice(margaritaFrozenCost.total),
+      margin: Math.round(((getPsychologicalPrice(margaritaFrozenCost.total) - margaritaFrozenCost.total) / margaritaFrozenCost.total) * 100),
     };
   })(),
   (() => {
@@ -292,6 +336,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Whisky',
       ingredientPrices: sazeracCost.prices,
       preparationCost: sazeracCost.total,
+      salePrice: getPsychologicalPrice(sazeracCost.total),
+      margin: Math.round(((getPsychologicalPrice(sazeracCost.total) - sazeracCost.total) / sazeracCost.total) * 100),
     };
   })(),
   (() => {
@@ -311,6 +357,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Ron',
       ingredientPrices: mojitoFresaCost.prices,
       preparationCost: mojitoFresaCost.total,
+      salePrice: getPsychologicalPrice(mojitoFresaCost.total),
+      margin: Math.round(((getPsychologicalPrice(mojitoFresaCost.total) - mojitoFresaCost.total) / mojitoFresaCost.total) * 100),
     };
   })(),
   (() => {
@@ -330,6 +378,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Sin Alcohol',
       ingredientPrices: virginMojitoCost.prices,
       preparationCost: virginMojitoCost.total,
+      salePrice: getPsychologicalPrice(virginMojitoCost.total),
+      margin: Math.round(((getPsychologicalPrice(virginMojitoCost.total) - virginMojitoCost.total) / virginMojitoCost.total) * 100),
     };
   })(),
   (() => {
@@ -349,6 +399,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Sin Alcohol',
       ingredientPrices: virginColadaCost.prices,
       preparationCost: virginColadaCost.total,
+      salePrice: getPsychologicalPrice(virginColadaCost.total),
+      margin: Math.round(((getPsychologicalPrice(virginColadaCost.total) - virginColadaCost.total) / virginColadaCost.total) * 100),
     };
   })(),
   (() => {
@@ -368,6 +420,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Vodka',
       ingredientPrices: espressoMartiniCost.prices,
       preparationCost: espressoMartiniCost.total,
+      salePrice: getPsychologicalPrice(espressoMartiniCost.total),
+      margin: Math.round(((getPsychologicalPrice(espressoMartiniCost.total) - espressoMartiniCost.total) / espressoMartiniCost.total) * 100),
     };
   })(),
   (() => {
@@ -387,6 +441,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Licor',
       ingredientPrices: aperolSpritzCost.prices,
       preparationCost: aperolSpritzCost.total,
+      salePrice: getPsychologicalPrice(aperolSpritzCost.total),
+      margin: Math.round(((getPsychologicalPrice(aperolSpritzCost.total) - aperolSpritzCost.total) / aperolSpritzCost.total) * 100),
     };
   })(),
   (() => {
@@ -406,6 +462,8 @@ export const cocktails: Cocktail[] = [
       alcohol: 'Vodka',
       ingredientPrices: bloodyMaryCost.prices,
       preparationCost: bloodyMaryCost.total,
+      salePrice: getPsychologicalPrice(bloodyMaryCost.total),
+      margin: Math.round(((getPsychologicalPrice(bloodyMaryCost.total) - bloodyMaryCost.total) / bloodyMaryCost.total) * 100),
     };
   })(),
 ];

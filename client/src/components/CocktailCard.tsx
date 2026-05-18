@@ -52,21 +52,31 @@ export default function CocktailCard({ cocktail }: CocktailCardProps) {
         <div className={`border-t border-[rgba(255,255,255,0.08)] pt-4 overflow-hidden transition-all duration-300 ${
           isExpanded ? 'max-h-[600px]' : 'max-h-0'
         }`}>
-          {/* Costo de Preparación */}
-          {cocktail.preparationCost && (
-            <div className="mb-4 p-3 bg-[rgba(201,168,106,0.1)] border border-[rgba(201,168,106,0.2)] rounded-lg">
-              <p className="text-[#c9a86a] text-sm font-bold mb-2">💰 Costo de preparación: ${cocktail.preparationCost.toLocaleString('es-AR')}</p>
-              {cocktail.ingredientPrices && (
-                <div className="text-xs text-[rgba(255,255,255,0.6)] space-y-1">
-                  <p className="font-semibold text-[#c9a86a] mb-2">Desglose:</p>
-                  {Object.entries(cocktail.ingredientPrices).map(([ingredient, price]) => (
-                    <div key={ingredient} className="flex justify-between">
-                      <span>{ingredient}</span>
-                      <span className="font-semibold text-[#c9a86a]">${price.toLocaleString('es-AR')}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+          {/* Precios */}
+          {cocktail.preparationCost && cocktail.salePrice && (
+            <div className="mb-4 space-y-3">
+              {/* Precio de Venta Destacado */}
+              <div className="p-4 bg-gradient-to-r from-[rgba(201,168,106,0.2)] to-[rgba(201,168,106,0.1)] border border-[rgba(201,168,106,0.3)] rounded-lg">
+                <p className="text-[#c9a86a] text-xs font-bold tracking-widest uppercase mb-1">Precio de Venta Sugerido</p>
+                <p className="text-white text-2xl font-bold">${cocktail.salePrice.toLocaleString('es-AR')}</p>
+                <p className="text-[rgba(255,255,255,0.6)] text-xs mt-1">Margen: {cocktail.margin}%</p>
+              </div>
+              
+              {/* Costo de Preparación */}
+              <div className="p-3 bg-[rgba(201,168,106,0.1)] border border-[rgba(201,168,106,0.2)] rounded-lg">
+                <p className="text-[#c9a86a] text-sm font-bold mb-2">💰 Costo de preparación: ${cocktail.preparationCost.toLocaleString('es-AR')}</p>
+                {cocktail.ingredientPrices && (
+                  <div className="text-xs text-[rgba(255,255,255,0.6)] space-y-1">
+                    <p className="font-semibold text-[#c9a86a] mb-2">Desglose:</p>
+                    {Object.entries(cocktail.ingredientPrices).map(([ingredient, price]) => (
+                      <div key={ingredient} className="flex justify-between">
+                        <span>{ingredient}</span>
+                        <span className="font-semibold text-[#c9a86a]">${price.toLocaleString('es-AR')}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
           
