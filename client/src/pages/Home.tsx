@@ -153,7 +153,7 @@ export default function Home() {
                 { number: `${allCocktails.length}+`, label: 'Cocktails documentados' },
                 { number: '40+', label: 'Historias originales' },
                 { number: '100%', label: 'Recetas profesionales' },
-                { number: 'Premium', label: 'Experiencia interactiva' },
+                { number: '⭐', label: 'Experiencia interactiva' },
               ].map((stat, i) => (
                 <div key={i} className="bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.1)] p-6 rounded-2xl backdrop-blur-xl text-center hover:bg-[rgba(255,255,255,0.1)] transition-all">
                   <div className="text-2xl md:text-3xl font-bold text-[#c9a86a] mb-1">{stat.number}</div>
@@ -164,10 +164,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 text-center text-[rgba(255,255,255,0.5)] animate-bounce">
-          <div className="text-xs tracking-widest mb-2">Scroll</div>
-          <ChevronDown size={16} className="mx-auto" />
-        </div>
+
       </section>
 
       {/* Features */}

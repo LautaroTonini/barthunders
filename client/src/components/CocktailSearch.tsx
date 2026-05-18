@@ -20,7 +20,14 @@ export default function CocktailSearch({ onCocktailsChange }: CocktailSearchProp
   
   // Extract all unique ingredients
   const allIngredients = Array.from(
-    new Set(cocktails.flatMap(c => c.ingredients.map(ing => ing.split(' ').slice(1).join(' ').toLowerCase())))
+    new Set(cocktails.flatMap(c => c.ingredients.map(ing => {
+      let cleaned = ing.split(' ').slice(1).join(' ').toLowerCase();
+      // Remover "de " del inicio
+      if (cleaned.startsWith('de ')) {
+        cleaned = cleaned.slice(3);
+      }
+      return cleaned;
+    })).filter(ing => ing.trim() !== ''))
   ).sort();
 
   // Filter cocktails based on search and filters
@@ -191,11 +198,7 @@ export default function CocktailSearch({ onCocktailsChange }: CocktailSearchProp
               </button>
             ))}
           </div>
-          {allIngredients.length > 12 && (
-            <p className="text-xs text-[#6d5c5c] mt-2">
-              +{allIngredients.length - 12} ingredientes más disponibles
-            </p>
-          )}
+
         </div>
       </div>
 

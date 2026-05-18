@@ -39,6 +39,12 @@ const BOTTLE_PRICES: { [key: string]: number } = {
   'Licor de café': 20000,
   'Prosecco': 18000,
   'Aperol': 22000,
+  'Pisco': 40000,
+  'Cachaça': 35000,
+  'Cognac': 85000,
+  'Cerveza': 3000,
+  'Crema': 5000,
+  'Triple Sec': 25000,
 };
 
 export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {

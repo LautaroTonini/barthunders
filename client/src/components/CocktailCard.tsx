@@ -110,16 +110,6 @@ export default function CocktailCard({ cocktail }: CocktailCardProps) {
             {isExpanded ? 'Ocultar detalles' : 'Ver detalles'}
             <ChevronDown size={16} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
           </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              generateCocktailPDF(cocktail);
-            }}
-            className="px-4 py-2 bg-[rgba(201,168,106,0.15)] hover:bg-[rgba(201,168,106,0.25)] text-[#c9a86a] rounded-lg transition-colors text-sm font-medium flex items-center gap-2 flex-shrink-0"
-            title="Descargar PDF"
-          >
-            <Download size={16} />
-          </button>
         </div>
       </div>
     </div>
