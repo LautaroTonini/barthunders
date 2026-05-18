@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
+import CocktailSearch from '@/components/CocktailSearch';
+import CocktailCard from '@/components/CocktailCard';
+import { Cocktail, cocktails as allCocktails } from '@/data/cocktails';
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const [filteredCocktails, setFilteredCocktails] = useState<Cocktail[]>(allCocktails);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -142,7 +146,7 @@ export default function Home() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { number: '120+', label: 'Cocktails documentados' },
+                { number: `${allCocktails.length}+`, label: 'Cocktails documentados' },
                 { number: '40+', label: 'Historias originales' },
                 { number: '100%', label: 'Recetas profesionales' },
                 { number: 'Premium', label: 'Experiencia interactiva' },
@@ -192,83 +196,41 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Cocktails Showcase */}
+      {/* Cocktails Showcase with Search */}
       <section id="catalogo" className="section-pad bg-gradient-to-br from-[#2a0b0f] via-[#52131b] to-[#1a0508] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[rgba(201,168,106,0.08)] rounded-full blur-3xl pointer-events-none" />
 
         <div className="container relative z-10">
-          <div className="text-center mb-16">
-            <div className="section-label text-[#c9a86a]">Catálogo destacado</div>
-            <h2 className="text-4xl md:text-5xl font-bold text-[#f5e7d3] mb-4">Cocktails destacados</h2>
+          <div className="text-center mb-12">
+            <div className="section-label text-[#c9a86a]">Catálogo completo</div>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#f5e7d3] mb-4">Explorá nuestros cocktails</h2>
             <p className="text-lg text-[rgba(255,255,255,0.65)] max-w-2xl mx-auto">
-              Cada cocktail combina historia, técnica y experiencia visual.
+              Busca por nombre, filtra por ingredientes, sabor y tipo. Descubre {allCocktails.length}+ cocktails profesionales.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                name: 'Negroni',
-                badge: 'Clásico Italiano',
-                image: '/manus-storage/negroni_a1b2c3d4.png',
-                desc: 'Nacido en Florencia alrededor de 1919, el Negroni se convirtió en uno de los cocktails más icónicos de la coctelería italiana.',
-                tags: ['Gin', 'Amargo', 'Clásico'],
-                ingredients: ['30 ml Gin', '30 ml Campari', '30 ml Vermouth Rosso', 'Piel de naranja'],
-                prep: ['Agregar hielo grande al vaso.', 'Verter ingredientes y mezclar suavemente.', 'Perfumar con piel de naranja.'],
-              },
-              {
-                name: 'Mojito',
-                badge: 'Caribeño',
-                image: '/manus-storage/mojito_a1b2c3d4.png',
-                desc: 'Originario de Cuba, el Mojito evolucionó desde mezclas medicinales del siglo XVI hasta convertirse en símbolo del Caribe.',
-                tags: ['Ron', 'Refrescante', 'Caribeño'],
-                ingredients: ['50 ml Ron blanco', 'Hierbabuena fresca', 'Azúcar', 'Jugo de lima', 'Soda'],
-                prep: ['Macerar suavemente la hierbabuena.', 'Agregar hielo triturado.', 'Completar con soda y decorar.'],
-              },
-              {
-                name: 'Old Fashioned',
-                badge: 'Vintage',
-                image: '/manus-storage/old-fashioned_a1b2c3d4.png',
-                desc: 'Considerado uno de los primeros cocktails modernos documentados en Estados Unidos durante el siglo XIX.',
-                tags: ['Whisky', 'Intenso', 'Vintage'],
-                ingredients: ['60 ml Bourbon', 'Azúcar', 'Angostura bitters', 'Piel de naranja'],
-                prep: ['Disolver azúcar y bitters.', 'Agregar hielo grande.', 'Incorporar bourbon y mezclar.'],
-              },
-            ].map((cocktail, i) => (
-              <div key={i} className="bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-3xl overflow-hidden hover:scale-105 hover:border-[rgba(201,168,106,0.3)] transition-all">
-                <div className="relative h-64 bg-cover bg-center" style={{ backgroundImage: `url(${cocktail.image})` }}>
-                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(30,5,8,0.8)] to-transparent" />
-                  <span className="absolute top-4 right-4 bg-[rgba(201,168,106,0.9)] text-[#52131b] text-xs font-bold px-3 py-1 rounded-full">
-                    {cocktail.badge}
-                  </span>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-3xl font-bold text-[#f5e7d3] mb-2">{cocktail.name}</h3>
-                  <p className="text-[rgba(255,255,255,0.65)] mb-4 text-sm leading-relaxed">{cocktail.desc}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {cocktail.tags.map((tag, j) => (
-                      <span key={j} className="px-3 py-1 bg-[rgba(201,168,106,0.12)] border border-[rgba(201,168,106,0.2)] text-[#e8c98a] text-xs font-medium rounded-full">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="border-t border-[rgba(255,255,255,0.08)] pt-4">
-                    <h4 className="text-[#c9a86a] text-xs font-bold tracking-widest mb-2 uppercase">Ingredientes</h4>
-                    <ul className="text-[rgba(255,255,255,0.7)] text-sm mb-4 space-y-1">
-                      {cocktail.ingredients.map((ing, j) => (
-                        <li key={j}>— {ing}</li>
-                      ))}
-                    </ul>
-                    <h4 className="text-[#c9a86a] text-xs font-bold tracking-widest mb-2 uppercase">Preparación</h4>
-                    <ul className="text-[rgba(255,255,255,0.7)] text-sm space-y-1">
-                      {cocktail.prep.map((step, j) => (
-                        <li key={j}>— {step}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+          {/* Search and Filters */}
+          <CocktailSearch onCocktailsChange={setFilteredCocktails} />
+
+          {/* Cocktails Grid */}
+          <div className="mt-12">
+            {filteredCocktails.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredCocktails.map((cocktail) => (
+                  <CocktailCard key={cocktail.id} cocktail={cocktail} />
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="text-center py-16">
+                <p className="text-lg text-[rgba(255,255,255,0.65)] mb-4">No se encontraron cocktails con esos criterios.</p>
+                <button
+                  onClick={() => setFilteredCocktails(allCocktails)}
+                  className="px-6 py-2 bg-[#c9a86a] text-[#52131b] rounded-full font-medium hover:bg-[#e8c98a] transition-colors"
+                >
+                  Mostrar todos
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -455,6 +417,16 @@ export default function Home() {
       >
         ↑
       </button>
+
+      {/* Add CSS for FAQ accordion */}
+      <style>{`
+        .faq-item.open .faq-answer {
+          max-height: 500px;
+        }
+        .faq-item.open .faq-icon {
+          transform: rotate(45deg);
+        }
+      `}</style>
     </div>
   );
 }
