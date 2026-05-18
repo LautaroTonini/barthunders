@@ -50,8 +50,26 @@ export default function CocktailCard({ cocktail }: CocktailCardProps) {
 
         {/* Expandable Content */}
         <div className={`border-t border-[rgba(255,255,255,0.08)] pt-4 overflow-hidden transition-all duration-300 ${
-          isExpanded ? 'max-h-96' : 'max-h-0'
+          isExpanded ? 'max-h-[600px]' : 'max-h-0'
         }`}>
+          {/* Costo de Preparación */}
+          {cocktail.preparationCost && (
+            <div className="mb-4 p-3 bg-[rgba(201,168,106,0.1)] border border-[rgba(201,168,106,0.2)] rounded-lg">
+              <p className="text-[#c9a86a] text-sm font-bold mb-2">💰 Costo de preparación: ${cocktail.preparationCost.toLocaleString('es-AR')}</p>
+              {cocktail.ingredientPrices && (
+                <div className="text-xs text-[rgba(255,255,255,0.6)] space-y-1">
+                  <p className="font-semibold text-[#c9a86a] mb-2">Desglose:</p>
+                  {Object.entries(cocktail.ingredientPrices).map(([ingredient, price]) => (
+                    <div key={ingredient} className="flex justify-between">
+                      <span>{ingredient}</span>
+                      <span className="font-semibold text-[#c9a86a]">${price.toLocaleString('es-AR')}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+          
           <h4 className="text-[#c9a86a] text-xs font-bold tracking-widest mb-3 uppercase">Ingredientes</h4>
           <ul className="text-[rgba(255,255,255,0.7)] text-sm mb-4 space-y-1">
             {cocktail.ingredients.map((ing, j) => (
