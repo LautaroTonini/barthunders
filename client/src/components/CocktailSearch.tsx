@@ -15,8 +15,8 @@ export default function CocktailSearch({ onCocktailsChange }: CocktailSearchProp
 
   // Get unique values for filters
   const uniqueFlavors = Array.from(new Set(cocktails.map(c => c.flavor)));
-  const uniqueTypes = Array.from(new Set(cocktails.map(c => c.type)));
-  const uniqueAlcohols = Array.from(new Set(cocktails.map(c => c.alcohol)));
+  const uniqueTypes = Array.from(new Set(cocktails.map(c => c.type))).filter(t => t !== 'Sin Alcohol');
+  const uniqueAlcohols = Array.from(new Set(cocktails.map(c => c.alcohol))).filter(a => a !== 'Sin Alcohol');
   
   // Extract all unique ingredients
   const allIngredients = Array.from(

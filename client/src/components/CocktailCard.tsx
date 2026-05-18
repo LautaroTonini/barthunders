@@ -50,7 +50,7 @@ export default function CocktailCard({ cocktail }: CocktailCardProps) {
 
         {/* Expandable Content */}
         <div className={`border-t border-[rgba(255,255,255,0.08)] pt-4 overflow-hidden transition-all duration-300 ${
-          isExpanded ? 'max-h-[600px]' : 'max-h-0'
+          isExpanded ? 'max-h-[800px]' : 'max-h-0'
         }`}>
           {/* Precios */}
           {cocktail.preparationCost && cocktail.salePrice && (

@@ -17,6 +17,12 @@ const BOTTLE_PRICES: { [key: string]: number } = {
   'Licor de café': 20000,
   'Prosecco': 18000,
   'Aperol': 22000,
+  'Pisco': 40000,
+  'Cachaça': 35000,
+  'Triple Sec': 25000,
+  'Cognac': 85000,
+  'Cerveza': 3000,
+  'Crema': 5000,
 };
 
 // Función para redondear a un precio psicológicamente atractivo
@@ -101,7 +107,7 @@ export interface Cocktail {
   preparation: string[];
   flavor: 'Amargo' | 'Dulce' | 'Refrescante' | 'Intenso' | 'Suave' | 'Herbáceo' | 'Afrutado';
   type: 'Clásico' | 'Moderno' | 'Caribeño' | 'Tropical' | 'Vintage' | 'Contemporáneo' | 'Sin Alcohol';
-  alcohol: 'Gin' | 'Ron' | 'Whisky' | 'Vodka' | 'Tequila' | 'Brandy' | 'Licor' | 'Sin Alcohol';
+  alcohol: 'Gin' | 'Ron' | 'Whisky' | 'Vodka' | 'Tequila' | 'Brandy' | 'Licor' | 'Sin Alcohol' | 'Pisco' | 'Cachaça' | 'Cerveza' | 'Cognac';
   ingredientPrices?: { [key: string]: number }; // Precios en ARS
   preparationCost?: number; // Costo total de preparación en ARS
   salePrice?: number; // Precio de venta sugerido en ARS
@@ -370,7 +376,7 @@ export const cocktails: Cocktail[] = [
       badge: 'Sin Alcohol',
       image: '/manus-storage/mojito_a1b2c3d4.png',
       description: 'Versión sin alcohol del mojito clásico, refrescante y perfecta para cualquier ocasión.',
-      tags: ['Sin Alcohol', 'Refrescante', 'Saludable'],
+      tags: ['Refrescante', 'Saludable'],
       ingredients: virginMojitoIngredients,
       preparation: ['Macerar hierbabuena y azúcar.', 'Agregar jugo de lima.', 'Llenar de hielo.', 'Completar con soda.'],
       flavor: 'Refrescante',
@@ -391,7 +397,7 @@ export const cocktails: Cocktail[] = [
       badge: 'Sin Alcohol Tropical',
       image: '/manus-storage/mojito_a1b2c3d4.png',
       description: 'Piña colada sin alcohol, igualmente cremosa y deliciosa para disfrutar sin culpa.',
-      tags: ['Sin Alcohol', 'Tropical', 'Cremoso'],
+      tags: ['Tropical', 'Cremoso'],
       ingredients: virginColadaIngredients,
       preparation: ['Licuar crema de coco y jugo de piña con hielo.', 'Servir en vaso tropical.', 'Decorar con piña.'],
       flavor: 'Dulce',
@@ -464,6 +470,111 @@ export const cocktails: Cocktail[] = [
       preparationCost: bloodyMaryCost.total,
       salePrice: getPsychologicalPrice(bloodyMaryCost.total),
       margin: Math.round(((getPsychologicalPrice(bloodyMaryCost.total) - bloodyMaryCost.total) / bloodyMaryCost.total) * 100),
+    };
+  })(),
+  (() => {
+    const piscoCourIngredients = ['60 ml Pisco', '30 ml Jugo de lima fresco', '20 ml Jarabe simple', 'Clara de huevo', 'Angostura bitters'];
+    const piscoCourCost = calculateCocktailCost(piscoCourIngredients);
+    return {
+      id: 'pisco-sour',
+      name: 'Pisco Sour',
+      badge: 'Peruano Clásico',
+      image: '/manus-storage/negroni_a1b2c3d4.png',
+      description: 'Cocktail peruano emblemático, suave y cremoso con sabor cítrico y acidez equilibrada.',
+      tags: ['Pisco', 'Refrescante', 'Cremoso'],
+      ingredients: piscoCourIngredients,
+      preparation: ['Verter pisco, jugo de lima y jarabe en coctelera.', 'Agregar clara de huevo.', 'Agitar vigorosamente.', 'Colar en copa y decorar con bitters.'],
+      flavor: 'Refrescante',
+      type: 'Clásico',
+      alcohol: 'Pisco',
+      ingredientPrices: piscoCourCost.prices,
+      preparationCost: piscoCourCost.total,
+      salePrice: getPsychologicalPrice(piscoCourCost.total),
+      margin: Math.round(((getPsychologicalPrice(piscoCourCost.total) - piscoCourCost.total) / piscoCourCost.total) * 100),
+    };
+  })(),
+  (() => {
+    const caipirinhaIngredients = ['60 ml Cachaça', '1 lima entera', 'Azúcar morena', 'Hielo picado'];
+    const caipirinhaCost = calculateCocktailCost(caipirinhaIngredients);
+    return {
+      id: 'caipirinha',
+      name: 'Caipirinha',
+      badge: 'Brasileño Tropical',
+      image: '/manus-storage/mojito_a1b2c3d4.png',
+      description: 'Bebida brasileña auténtica, refrescante y potente con sabor cítrico natural.',
+      tags: ['Cachaça', 'Refrescante', 'Tropical'],
+      ingredients: caipirinhaIngredients,
+      preparation: ['Cortar lima en cuartos.', 'Macerar con azúcar morena.', 'Llenar vaso con hielo picado.', 'Verter cachaça y mezclar.'],
+      flavor: 'Refrescante',
+      type: 'Tropical',
+      alcohol: 'Cachaça',
+      ingredientPrices: caipirinhaCost.prices,
+      preparationCost: caipirinhaCost.total,
+      salePrice: getPsychologicalPrice(caipirinhaCost.total),
+      margin: Math.round(((getPsychologicalPrice(caipirinhaCost.total) - caipirinhaCost.total) / caipirinhaCost.total) * 100),
+    };
+  })(),
+  (() => {
+    const sidecarIngredients = ['50 ml Cognac', '25 ml Triple Sec', '20 ml Jugo de lima fresco'];
+    const sidecarCost = calculateCocktailCost(sidecarIngredients);
+    return {
+      id: 'sidecar',
+      name: 'Sidecar',
+      badge: 'Francés Sofisticado',
+      image: '/manus-storage/negroni_a1b2c3d4.png',
+      description: 'Cocktail francés elegante, suave y sofisticado con sabores cítricos y alcohólicos complejos.',
+      tags: ['Cognac', 'Afrutado', 'Sofisticado'],
+      ingredients: sidecarIngredients,
+      preparation: ['Verter ingredientes en coctelera.', 'Agitar con hielo.', 'Colar en copa de coctel.', 'Decorar con piel de naranja.'],
+      flavor: 'Afrutado',
+      type: 'Clásico',
+      alcohol: 'Cognac',
+      ingredientPrices: sidecarCost.prices,
+      preparationCost: sidecarCost.total,
+      salePrice: getPsychologicalPrice(sidecarCost.total),
+      margin: Math.round(((getPsychologicalPrice(sidecarCost.total) - sidecarCost.total) / sidecarCost.total) * 100),
+    };
+  })(),
+  (() => {
+    const michiladaIngredients = ['350 ml Cerveza', '30 ml Jugo de lima', 'Salsa Maggi', 'Tabasco', 'Sal y pimienta', 'Limón'];
+    const michiladaCost = calculateCocktailCost(michiladaIngredients);
+    return {
+      id: 'michelada',
+      name: 'Michelada',
+      badge: 'Mexicano Refrescante',
+      image: '/manus-storage/mojito_a1b2c3d4.png',
+      description: 'Cerveza mexicana condimentada, refrescante y picante, perfecta para días calurosos.',
+      tags: ['Cerveza', 'Picante', 'Refrescante'],
+      ingredients: michiladaIngredients,
+      preparation: ['Enfriar vaso con sal y pimienta.', 'Verter cerveza fría.', 'Agregar jugo de lima y salsa Maggi.', 'Añadir Tabasco al gusto.'],
+      flavor: 'Intenso',
+      type: 'Moderno',
+      alcohol: 'Cerveza',
+      ingredientPrices: michiladaCost.prices,
+      preparationCost: michiladaCost.total,
+      salePrice: getPsychologicalPrice(michiladaCost.total),
+      margin: Math.round(((getPsychologicalPrice(michiladaCost.total) - michiladaCost.total) / michiladaCost.total) * 100),
+    };
+  })(),
+  (() => {
+    const whiteRussianIngredients = ['50 ml Vodka', '20 ml Licor de café', '100 ml Crema'];
+    const whiteRussianCost = calculateCocktailCost(whiteRussianIngredients);
+    return {
+      id: 'white-russian',
+      name: 'White Russian',
+      badge: 'Moderno Cremoso',
+      image: '/manus-storage/negroni_a1b2c3d4.png',
+      description: 'Cocktail cremoso y suave, perfecto para después de cenar con sabor a café.',
+      tags: ['Vodka', 'Dulce', 'Cremoso'],
+      ingredients: whiteRussianIngredients,
+      preparation: ['Verter vodka en vaso con hielo.', 'Agregar licor de café.', 'Completar con crema.', 'Mezclar suavemente.'],
+      flavor: 'Dulce',
+      type: 'Moderno',
+      alcohol: 'Vodka',
+      ingredientPrices: whiteRussianCost.prices,
+      preparationCost: whiteRussianCost.total,
+      salePrice: getPsychologicalPrice(whiteRussianCost.total),
+      margin: Math.round(((getPsychologicalPrice(whiteRussianCost.total) - whiteRussianCost.total) / whiteRussianCost.total) * 100),
     };
   })(),
 ];
