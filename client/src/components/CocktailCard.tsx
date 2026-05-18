@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Download } from 'lucide-react';
 import { Cocktail } from '@/data/cocktails';
+import { generateCocktailPDF } from '@/lib/pdfGenerator';
 
 interface CocktailCardProps {
   cocktail: Cocktail;
@@ -10,11 +11,11 @@ export default function CocktailCard({ cocktail }: CocktailCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-3xl overflow-hidden hover:scale-105 hover:border-[rgba(201,168,106,0.3)] transition-all cursor-pointer"
+    <div className="bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-3xl overflow-hidden hover:scale-105 hover:border-[rgba(201,168,106,0.3)] transition-all cursor-pointer flex flex-col h-full"
       onClick={() => setIsExpanded(!isExpanded)}
     >
       {/* Image Section */}
-      <div className="relative h-64 bg-cover bg-center" style={{ backgroundImage: `url(${cocktail.image})` }}>
+      <div className="relative h-64 bg-cover bg-center flex-shrink-0" style={{ backgroundImage: `url(${cocktail.image})` }}>
         <div className="absolute inset-0 bg-gradient-to-t from-[rgba(30,5,8,0.8)] to-transparent" />
         <span className="absolute top-4 right-4 bg-[rgba(201,168,106,0.9)] text-[#52131b] text-xs font-bold px-3 py-1 rounded-full">
           {cocktail.badge}
@@ -22,28 +23,28 @@ export default function CocktailCard({ cocktail }: CocktailCardProps) {
       </div>
 
       {/* Content Section */}
-      <div className="p-6 bg-gradient-to-b from-[rgba(255,255,255,0.05)] to-[rgba(30,5,8,0.3)]">
+      <div className="p-6 bg-gradient-to-b from-[rgba(255,255,255,0.05)] to-[rgba(30,5,8,0.3)] flex flex-col flex-grow">
         <h3 className="text-3xl font-bold text-[#f5e7d3] mb-2">{cocktail.name}</h3>
-        <p className="text-[rgba(255,255,255,0.65)] mb-4 text-sm leading-relaxed">{cocktail.description}</p>
+        <p className="text-[rgba(255,255,255,0.65)] mb-4 text-sm leading-relaxed flex-grow">{cocktail.description}</p>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-4">
+        {/* Tags - Altura fija */}
+        <div className="flex flex-wrap gap-2 mb-4 h-8 items-center">
           {cocktail.tags.map((tag, i) => (
-            <span key={i} className="px-3 py-1 bg-[rgba(201,168,106,0.12)] border border-[rgba(201,168,106,0.2)] text-[#e8c98a] text-xs font-medium rounded-full">
+            <span key={i} className="px-3 py-1 bg-[rgba(201,168,106,0.12)] border border-[rgba(201,168,106,0.2)] text-[#e8c98a] text-xs font-medium rounded-full whitespace-nowrap">
               {tag}
             </span>
           ))}
         </div>
 
-        {/* Metadata Pills */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          <span className="px-3 py-1 bg-[rgba(201,168,106,0.08)] text-[#c9a86a] text-xs font-bold rounded-full">
+        {/* Metadata Pills - Altura fija */}
+        <div className="flex flex-wrap gap-2 mb-4 h-10 items-center">
+          <span className="px-3 py-1 bg-[rgba(201,168,106,0.08)] text-[#c9a86a] text-xs font-bold rounded-full whitespace-nowrap">
             🍷 {cocktail.flavor}
           </span>
-          <span className="px-3 py-1 bg-[rgba(201,168,106,0.08)] text-[#c9a86a] text-xs font-bold rounded-full">
+          <span className="px-3 py-1 bg-[rgba(201,168,106,0.08)] text-[#c9a86a] text-xs font-bold rounded-full whitespace-nowrap">
             🎯 {cocktail.type}
           </span>
-          <span className="px-3 py-1 bg-[rgba(201,168,106,0.08)] text-[#c9a86a] text-xs font-bold rounded-full">
+          <span className="px-3 py-1 bg-[rgba(201,168,106,0.08)] text-[#c9a86a] text-xs font-bold rounded-full whitespace-nowrap">
             🥃 {cocktail.alcohol}
           </span>
         </div>
@@ -97,17 +98,29 @@ export default function CocktailCard({ cocktail }: CocktailCardProps) {
           </ol>
         </div>
 
-        {/* Expand Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsExpanded(!isExpanded);
-          }}
-          className="w-full mt-4 flex items-center justify-center gap-2 py-2 text-[#c9a86a] hover:bg-[rgba(201,168,106,0.1)] rounded-lg transition-colors text-sm font-medium"
-        >
-          {isExpanded ? 'Ocultar detalles' : 'Ver detalles'}
-          <ChevronDown size={16} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-        </button>
+        {/* Buttons */}
+        <div className="flex gap-2 mt-4 flex-shrink-0">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsExpanded(!isExpanded);
+            }}
+            className="flex-1 flex items-center justify-center gap-2 py-2 text-[#c9a86a] hover:bg-[rgba(201,168,106,0.1)] rounded-lg transition-colors text-sm font-medium"
+          >
+            {isExpanded ? 'Ocultar detalles' : 'Ver detalles'}
+            <ChevronDown size={16} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              generateCocktailPDF(cocktail);
+            }}
+            className="px-4 py-2 bg-[rgba(201,168,106,0.15)] hover:bg-[rgba(201,168,106,0.25)] text-[#c9a86a] rounded-lg transition-colors text-sm font-medium flex items-center gap-2 flex-shrink-0"
+            title="Descargar PDF"
+          >
+            <Download size={16} />
+          </button>
+        </div>
       </div>
     </div>
   );
