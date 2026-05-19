@@ -18,34 +18,7 @@ interface BottleRequirement {
   totalMl: number;
   bottleSize: number;
   bottlesNeeded: number;
-  cost: number;
 }
-
-const BOTTLE_PRICES: { [key: string]: number } = {
-  'Gin': 28525,
-  'Ron blanco': 20149,
-  'Whisky': 92900,
-  'Bourbon': 92900,
-  'Rye Whisky': 92900,
-  'Tequila': 35000,
-  'Vodka': 23237,
-  'Campari': 25000,
-  'Vermouth Rosso': 15000,
-  'Cointreau': 30000,
-  'Crema de coco': 8000,
-  'Angostura bitters': 5000,
-  "Peychaud's bitters": 5000,
-  'Licor de naranja': 30000,
-  'Licor de café': 20000,
-  'Prosecco': 18000,
-  'Aperol': 22000,
-  'Pisco': 40000,
-  'Cachaça': 35000,
-  'Cognac': 85000,
-  'Cerveza': 3000,
-  'Crema': 5000,
-  'Triple Sec': 25000,
-};
 
 export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
   const [guests, setGuests] = useState<number>(10);
@@ -80,13 +53,8 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
           amount = 2; // 2ml por dash
         }
 
-        // Buscar el nombre del ingrediente
-        for (const [key] of Object.entries(BOTTLE_PRICES)) {
-          if (ingredient.toLowerCase().includes(key.toLowerCase())) {
-            ingredientName = key;
-            break;
-          }
-        }
+        // Extraer el nombre del ingrediente (todo antes de la cantidad)
+        ingredientName = ingredient.replace(/\s*\d+\s*ml.*/, '').replace(/\s*(dash|dashes).*/, '').trim();
 
         if (amount > 0) {
           ingredientTotals[ingredientName] = (ingredientTotals[ingredientName] || 0) + (amount * cocktailsOfThisType);
@@ -99,24 +67,18 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
       .map(([name, totalMl]) => {
         const bottleSize = 700; // 700ml estándar
         const bottlesNeeded = Math.ceil(totalMl / bottleSize);
-        const price = BOTTLE_PRICES[name] || 0;
 
         return {
           name,
           totalMl: Math.round(totalMl),
           bottleSize,
           bottlesNeeded,
-          cost: price * bottlesNeeded,
         };
       })
       .sort((a, b) => b.bottlesNeeded - a.bottlesNeeded);
 
     return requirements;
   }, [selectedCocktails, guests, cocktails]);
-
-  const totalCost = useMemo(() => {
-    return bottleRequirements.reduce((sum, req) => sum + req.cost, 0);
-  }, [bottleRequirements]);
 
   const totalBottles = useMemo(() => {
     return bottleRequirements.reduce((sum, req) => sum + req.bottlesNeeded, 0);
@@ -163,8 +125,8 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
     <div className="w-full bg-gradient-to-b from-[rgba(30,5,8,0.5)] to-[rgba(30,5,8,0.2)] rounded-3xl border border-[rgba(201,168,106,0.2)] p-8 mb-12">
       {/* Header */}
       <div className="mb-8">
-        <h2 className="text-4xl font-bold text-[#f5e7d3] mb-2">🍾 Calculadora de Botellas</h2>
-        <p className="text-[rgba(255,255,255,0.6)]">Planifica tu fiesta: selecciona cocktails e ingresa invitados para calcular botellas necesarias</p>
+        <h2 className="text-4xl font-bold text-[#f5e7d3] mb-2">🛒 Lista de Compras</h2>
+        <p className="text-[rgba(255,255,255,0.6)]">Planifica tu evento: selecciona cocktails e ingresa invitados para obtener la lista de ingredientes a comprar</p>
       </div>
 
       {/* Inputs Section */}
@@ -187,9 +149,9 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
 
         {/* Total Summary */}
         <div className="bg-[rgba(201,168,106,0.1)] border border-[rgba(201,168,106,0.2)] rounded-lg p-4 flex flex-col justify-center">
-          <p className="text-[rgba(255,255,255,0.6)] text-sm mb-1">Resumen</p>
+          <p className="text-[rgba(255,255,255,0.6)] text-sm mb-1">Resumen de Compra</p>
           <p className="text-2xl font-bold text-[#c9a86a] mb-1">{totalBottles} botellas</p>
-          <p className="text-sm text-[rgba(255,255,255,0.5)]">Costo total: <span className="text-[#c9a86a] font-bold">${totalCost.toLocaleString('es-AR')}</span></p>
+          <p className="text-sm text-[rgba(255,255,255,0.5)]">Ingredientes necesarios: <span className="text-[#c9a86a] font-bold">{bottleRequirements.length}</span></p>
         </div>
       </div>
 
@@ -252,7 +214,7 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
             onClick={() => setIsExpanded(!isExpanded)}
             className="w-full flex items-center justify-between p-4 bg-[rgba(201,168,106,0.1)] border border-[rgba(201,168,106,0.2)] rounded-lg hover:bg-[rgba(201,168,106,0.15)] transition-colors mb-4"
           >
-            <span className="text-[#c9a86a] font-bold">📋 Detalles de Botellas Necesarias</span>
+            <span className="text-[#c9a86a] font-bold">📋 Lista de Ingredientes a Comprar</span>
             <ChevronDown size={20} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
           </button>
 
@@ -260,24 +222,20 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
             <div className="space-y-3">
               {bottleRequirements.map((req, idx) => (
                 <div key={idx} className="bg-[rgba(255,255,255,0.05)] border border-[rgba(201,168,106,0.1)] rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-[#f5e7d3] font-semibold">{req.name}</h4>
-                    <span className="px-3 py-1 bg-[rgba(201,168,106,0.2)] text-[#c9a86a] text-sm font-bold rounded-full">
-                      {req.bottlesNeeded} botellas
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-[#f5e7d3] font-semibold text-lg">{req.name}</h4>
+                    <span className="px-4 py-2 bg-[rgba(201,168,106,0.3)] text-[#c9a86a] text-base font-bold rounded-full">
+                      {req.bottlesNeeded} botella{req.bottlesNeeded !== 1 ? 's' : ''}
                     </span>
                   </div>
-                  <div className="grid grid-cols-3 gap-4 text-xs text-[rgba(255,255,255,0.6)]">
+                  <div className="grid grid-cols-2 gap-4 text-sm text-[rgba(255,255,255,0.6)]">
                     <div>
-                      <p className="text-[rgba(255,255,255,0.4)] mb-1">Total ml necesarios</p>
-                      <p className="text-[#c9a86a] font-bold">{req.totalMl} ml</p>
+                      <p className="text-[rgba(255,255,255,0.4)] mb-1">Cantidad total necesaria</p>
+                      <p className="text-[#c9a86a] font-bold text-base">{req.totalMl} ml</p>
                     </div>
                     <div>
-                      <p className="text-[rgba(255,255,255,0.4)] mb-1">Tamaño botella</p>
-                      <p className="text-[#c9a86a] font-bold">{req.bottleSize} ml</p>
-                    </div>
-                    <div>
-                      <p className="text-[rgba(255,255,255,0.4)] mb-1">Costo total</p>
-                      <p className="text-[#c9a86a] font-bold">${req.cost.toLocaleString('es-AR')}</p>
+                      <p className="text-[rgba(255,255,255,0.4)] mb-1">Tamaño de botella estándar</p>
+                      <p className="text-[#c9a86a] font-bold text-base">{req.bottleSize} ml</p>
                     </div>
                   </div>
                 </div>
@@ -285,14 +243,14 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
 
               {/* Total Summary */}
               <div className="bg-gradient-to-r from-[rgba(201,168,106,0.2)] to-[rgba(201,168,106,0.1)] border border-[rgba(201,168,106,0.3)] rounded-lg p-4 mt-4">
-                <div className="flex items-center justify-between">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[rgba(255,255,255,0.6)] text-sm mb-1">Costo Total de Botellas</p>
-                    <p className="text-3xl font-bold text-[#c9a86a]">${totalCost.toLocaleString('es-AR')}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[rgba(255,255,255,0.6)] text-sm mb-1">Botellas Totales</p>
+                    <p className="text-[rgba(255,255,255,0.6)] text-sm mb-1">Total de Botellas</p>
                     <p className="text-3xl font-bold text-[#c9a86a]">{totalBottles}</p>
+                  </div>
+                  <div>
+                    <p className="text-[rgba(255,255,255,0.6)] text-sm mb-1">Ingredientes Diferentes</p>
+                    <p className="text-3xl font-bold text-[#c9a86a]">{bottleRequirements.length}</p>
                   </div>
                 </div>
               </div>
@@ -303,7 +261,7 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
 
       {selectedCocktails.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-[rgba(255,255,255,0.5)]">Selecciona al menos un cocktail para ver el cálculo de botellas</p>
+          <p className="text-[rgba(255,255,255,0.5)]">Selecciona al menos un cocktail para ver la lista de ingredientes a comprar</p>
         </div>
       )}
     </div>
