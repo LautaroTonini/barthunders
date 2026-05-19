@@ -203,3 +203,73 @@
     }
   }
 }
+/* Performance & Accessibility Optimizations */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Image loading optimization */
+img[loading="lazy"] {
+  background: linear-gradient(90deg, rgba(201,168,106,0.1), rgba(201,168,106,0.05), rgba(201,168,106,0.1));
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Optimize interactive elements */
+button,
+a[href],
+[role="button"] {
+  @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring;
+}
+
+/* Performance containment */
+.section-pad {
+  contain: layout style paint;
+}
+
+.grid {
+  contain: layout style;
+}
+
+/* Will-change for frequently animated elements */
+.btn-wine,
+.btn-gold {
+  will-change: transform;
+}
+
+/* Smooth scroll support */
+@supports (scroll-behavior: smooth) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .section-pad {
+    @apply py-16;
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+  }
+  .no-print {
+    display: none;
+  }
+}
