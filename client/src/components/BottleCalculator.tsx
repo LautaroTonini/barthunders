@@ -13,11 +13,10 @@ interface SelectedCocktail {
   quantity: number;
 }
 
-interface BottleRequirement {
+interface IngredientRequirement {
   name: string;
-  totalMl: number;
-  bottleSize: number;
-  bottlesNeeded: number;
+  totalAmount: number;
+  unit: string; // 'ml', 'unidad', 'dash'
 }
 
 export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
@@ -27,12 +26,12 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
 
   const COCKTAILS_PER_PERSON = 4;
 
-  // Calcular botellas necesarias
-  const bottleRequirements = useMemo(() => {
+  // Calcular ingredientes necesarios
+  const ingredientRequirements = useMemo(() => {
     if (selectedCocktails.length === 0 || guests === 0) return [];
 
     const totalCocktails = guests * COCKTAILS_PER_PERSON;
-    const ingredientTotals: { [key: string]: number } = {};
+    const ingredientTotals: { [key: string]: { amount: number; unit: string } } = {};
 
     selectedCocktails.forEach(selected => {
       const cocktail = cocktails.find(c => c.id === selected.id);
@@ -41,48 +40,60 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
       const cocktailsOfThisType = Math.ceil((selected.quantity / 100) * totalCocktails);
 
       cocktail.ingredients.forEach(ingredient => {
-        const mlMatch = ingredient.match(/(\d+)\s*ml/);
-        const dashMatch = ingredient.match(/(dash|dashes)/);
+        const mlMatch = ingredient.match(/(\d+)\s*ml\s+(.+)/);
+        const dashMatch = ingredient.match(/(\d+)\s*(dash|dashes)\s+(.+)/);
+        const simpleIngredient = ingredient.match(/^([^0-9]+)$/);
 
         let amount = 0;
+        let unit = 'unidad';
         let ingredientName = ingredient;
 
         if (mlMatch) {
           amount = parseInt(mlMatch[1]);
+          ingredientName = mlMatch[2].trim();
+          unit = 'ml';
         } else if (dashMatch) {
-          amount = 2; // 2ml por dash
+          amount = parseInt(dashMatch[1]);
+          ingredientName = dashMatch[3].trim();
+          unit = 'dash';
+        } else if (simpleIngredient) {
+          amount = 1;
+          ingredientName = ingredient.trim();
+          unit = 'unidad';
         }
 
-        // Extraer el nombre del ingrediente (todo antes de la cantidad)
-        ingredientName = ingredient.replace(/\s*\d+\s*ml.*/, '').replace(/\s*(dash|dashes).*/, '').trim();
-
         if (amount > 0) {
-          ingredientTotals[ingredientName] = (ingredientTotals[ingredientName] || 0) + (amount * cocktailsOfThisType);
+          const key = ingredientName.toLowerCase();
+          if (!ingredientTotals[key]) {
+            ingredientTotals[key] = { amount: 0, unit };
+          }
+          
+          // Si es ml, multiplicar por cantidad de cocktails
+          if (unit === 'ml') {
+            ingredientTotals[key].amount += amount * cocktailsOfThisType;
+          } else if (unit === 'dash') {
+            // Convertir dashes a ml (1 dash ≈ 2ml)
+            ingredientTotals[key].amount += amount * 2 * cocktailsOfThisType;
+            ingredientTotals[key].unit = 'ml';
+          } else {
+            // Para unidades, sumar directamente
+            ingredientTotals[key].amount += cocktailsOfThisType;
+          }
         }
       });
     });
 
-    // Convertir a requerimientos de botellas
-    const requirements: BottleRequirement[] = Object.entries(ingredientTotals)
-      .map(([name, totalMl]) => {
-        const bottleSize = 700; // 700ml estándar
-        const bottlesNeeded = Math.ceil(totalMl / bottleSize);
-
-        return {
-          name,
-          totalMl: Math.round(totalMl),
-          bottleSize,
-          bottlesNeeded,
-        };
-      })
-      .sort((a, b) => b.bottlesNeeded - a.bottlesNeeded);
+    // Convertir a lista de ingredientes ordenada
+    const requirements: IngredientRequirement[] = Object.entries(ingredientTotals)
+      .map(([name, data]) => ({
+        name: name.charAt(0).toUpperCase() + name.slice(1),
+        totalAmount: Math.round(data.amount),
+        unit: data.unit,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     return requirements;
   }, [selectedCocktails, guests, cocktails]);
-
-  const totalBottles = useMemo(() => {
-    return bottleRequirements.reduce((sum, req) => sum + req.bottlesNeeded, 0);
-  }, [bottleRequirements]);
 
   const handleAddCocktail = (cocktail: Cocktail) => {
     const existing = selectedCocktails.find(c => c.id === cocktail.id);
@@ -126,7 +137,7 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
       {/* Header */}
       <div className="mb-8">
         <h2 className="text-4xl font-bold text-[#f5e7d3] mb-2">🛒 Lista de Compras</h2>
-        <p className="text-[rgba(255,255,255,0.6)]">Planifica tu evento: selecciona cocktails e ingresa invitados para obtener la lista de ingredientes a comprar</p>
+        <p className="text-[rgba(255,255,255,0.6)]">Planifica tu evento: selecciona cocktails e ingresa invitados para obtener la lista completa de ingredientes a comprar</p>
       </div>
 
       {/* Inputs Section */}
@@ -150,8 +161,8 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
         {/* Total Summary */}
         <div className="bg-[rgba(201,168,106,0.1)] border border-[rgba(201,168,106,0.2)] rounded-lg p-4 flex flex-col justify-center">
           <p className="text-[rgba(255,255,255,0.6)] text-sm mb-1">Resumen de Compra</p>
-          <p className="text-2xl font-bold text-[#c9a86a] mb-1">{totalBottles} botellas</p>
-          <p className="text-sm text-[rgba(255,255,255,0.5)]">Ingredientes necesarios: <span className="text-[#c9a86a] font-bold">{bottleRequirements.length}</span></p>
+          <p className="text-2xl font-bold text-[#c9a86a] mb-1">{ingredientRequirements.length} ingredientes</p>
+          <p className="text-sm text-[rgba(255,255,255,0.5)]">Total a comprar: <span className="text-[#c9a86a] font-bold">{ingredientRequirements.reduce((sum, ing) => sum + ing.totalAmount, 0)} unidades</span></p>
         </div>
       </div>
 
@@ -207,50 +218,47 @@ export default function BottleCalculator({ cocktails }: BottleCalculatorProps) {
         </div>
       )}
 
-      {/* Bottle Requirements */}
-      {bottleRequirements.length > 0 && (
+      {/* Ingredients List */}
+      {ingredientRequirements.length > 0 && (
         <div>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="w-full flex items-center justify-between p-4 bg-[rgba(201,168,106,0.1)] border border-[rgba(201,168,106,0.2)] rounded-lg hover:bg-[rgba(201,168,106,0.15)] transition-colors mb-4"
           >
-            <span className="text-[#c9a86a] font-bold">📋 Lista de Ingredientes a Comprar</span>
+            <span className="text-[#c9a86a] font-bold">📋 Ingredientes a Comprar</span>
             <ChevronDown size={20} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
           </button>
 
           {isExpanded && (
             <div className="space-y-3">
-              {bottleRequirements.map((req, idx) => (
-                <div key={idx} className="bg-[rgba(255,255,255,0.05)] border border-[rgba(201,168,106,0.1)] rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-[#f5e7d3] font-semibold text-lg">{req.name}</h4>
-                    <span className="px-4 py-2 bg-[rgba(201,168,106,0.3)] text-[#c9a86a] text-base font-bold rounded-full">
-                      {req.bottlesNeeded} botella{req.bottlesNeeded !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 text-sm text-[rgba(255,255,255,0.6)]">
-                    <div>
-                      <p className="text-[rgba(255,255,255,0.4)] mb-1">Cantidad total necesaria</p>
-                      <p className="text-[#c9a86a] font-bold text-base">{req.totalMl} ml</p>
+              <div className="bg-[rgba(255,255,255,0.05)] border border-[rgba(201,168,106,0.1)] rounded-lg p-4">
+                <h4 className="text-[#f5e7d3] font-semibold mb-4 text-lg">Lista Completa de Compras</h4>
+                <div className="space-y-2">
+                  {ingredientRequirements.map((ingredient, idx) => (
+                    <div key={idx} className="flex items-center justify-between py-2 border-b border-[rgba(201,168,106,0.1)] last:border-b-0">
+                      <div className="flex-1">
+                        <p className="text-[#f5e7d3] font-medium">{ingredient.name}</p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="px-3 py-1 bg-[rgba(201,168,106,0.2)] text-[#c9a86a] font-bold rounded-full text-sm">
+                          {ingredient.totalAmount} {ingredient.unit === 'ml' ? 'ml' : ingredient.unit === 'dash' ? 'dash' : 'unid.'}
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-[rgba(255,255,255,0.4)] mb-1">Tamaño de botella estándar</p>
-                      <p className="text-[#c9a86a] font-bold text-base">{req.bottleSize} ml</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
+              </div>
 
-              {/* Total Summary */}
-              <div className="bg-gradient-to-r from-[rgba(201,168,106,0.2)] to-[rgba(201,168,106,0.1)] border border-[rgba(201,168,106,0.3)] rounded-lg p-4 mt-4">
+              {/* Summary Card */}
+              <div className="bg-gradient-to-r from-[rgba(201,168,106,0.2)] to-[rgba(201,168,106,0.1)] border border-[rgba(201,168,106,0.3)] rounded-lg p-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[rgba(255,255,255,0.6)] text-sm mb-1">Total de Botellas</p>
-                    <p className="text-3xl font-bold text-[#c9a86a]">{totalBottles}</p>
+                    <p className="text-[rgba(255,255,255,0.6)] text-sm mb-1">Total de Ingredientes</p>
+                    <p className="text-3xl font-bold text-[#c9a86a]">{ingredientRequirements.length}</p>
                   </div>
                   <div>
-                    <p className="text-[rgba(255,255,255,0.6)] text-sm mb-1">Ingredientes Diferentes</p>
-                    <p className="text-3xl font-bold text-[#c9a86a]">{bottleRequirements.length}</p>
+                    <p className="text-[rgba(255,255,255,0.6)] text-sm mb-1">Unidades Totales</p>
+                    <p className="text-3xl font-bold text-[#c9a86a]">{ingredientRequirements.reduce((sum, ing) => sum + ing.totalAmount, 0)}</p>
                   </div>
                 </div>
               </div>
